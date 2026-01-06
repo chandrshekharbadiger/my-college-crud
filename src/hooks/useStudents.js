@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 
 export const useStudents = () => {
+  const generateId = () => 'student_' + Math.random().toString(36).substr(2, 9) + Date.now();
+
   const [students, setStudents] = useState(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -14,6 +16,26 @@ export const useStudents = () => {
     return [];
   });
 
+  const validateStudent = (student) => {
+    const { name, rollNo, course } = student;
+    if (!name?.trim() || !rollNo?.trim() || !course?.trim()) {
+      alert('Please fill all fields (Name, Roll No, Course)');
+      return false;
+    }
+    if (name.trim().length < 2) {
+      alert('Name must be at least 2 characters');
+      return false;
+    }
+    return true;
+  };
+
+  const isDuplicateRollNo = (rollNo, excludeId = null) => {
+    return students.some(student =>
+      student.rollNo.toLowerCase() === rollNo.toLowerCase().trim() && 
+      student.id !== excludeId
+    );
+  };
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -25,11 +47,30 @@ export const useStudents = () => {
   }, [students]);
 
   const addStudent = (student) => {
-    setStudents(prev => [...prev, { id: Date.now(), ...student }]);
+    if (!validateStudent(student)) return;
+    if (isDuplicateRollNo(student.rollNo)) {
+      alert(`Roll No "${student.rollNo}" already exists!`);
+      return;
+    }
+
+    const newStudent = { 
+      id: generateId(), 
+      ...student,
+      createdAt: new Date().toISOString()
+    };
+    setStudents(prev => [...prev, newStudent]);
   };
 
   const updateStudent = (id, updated) => {
-    setStudents(prev => prev.map(s => s.id === id ? { ...s, ...updated } : s));
+    if (!validateStudent(updated)) return;
+    if (isDuplicateRollNo(updated.rollNo, id)) {
+      alert(`Roll No "${updated.rollNo}" already exists!`);
+      return;
+    }
+
+    setStudents(prev => prev.map(s => 
+      s.id === id ? { ...s, ...updated, updatedAt: new Date().toISOString() } : s
+    ));
   };
 
   const deleteStudent = (id) => {
