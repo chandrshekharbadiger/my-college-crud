@@ -4,10 +4,10 @@ import StudentForm from './StudentForm';
 const StudentList = ({ students, addStudent, updateStudent, deleteStudent, editingStudent, setEditingStudent }) => (
   <div className="space-y-4">
     {editingStudent && (
-      <StudentForm 
-        student={editingStudent} 
-        onSave={(data) => { updateStudent(editingStudent.id, data); setEditingStudent(null); }} 
-        onCancel={() => setEditingStudent(null)} 
+      <StudentForm
+        student={editingStudent}
+        onSave={(data) => { updateStudent(editingStudent.id, data); setEditingStudent(null); }}
+        onCancel={() => setEditingStudent(null)}
       />
     )}
     {!editingStudent && <StudentForm student={{}} onSave={addStudent} />}
