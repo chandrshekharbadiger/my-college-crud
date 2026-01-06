@@ -5,8 +5,8 @@ const StudentItem = ({ student, onEdit, onDelete }) => (
       <p>Roll: {student.rollNo} | {student.course}</p>
     </div>
     <div className="flex space-x-2">
-      <button onClick={() => onEdit(student)} className="text-blue-500 hover:text-blue-700">Edit</button>
-      <button onClick={() => onDelete(student.id)} className="text-red-500 hover:text-red-700">Delete</button>
+      <button onClick={() => onEdit(student)} className="text-green-500 hover:text-green-700">✏️ Edit</button>
+      <button onClick={() => onDelete(student.id)} className="text-red-500 hover:text-red-700">🗑️ Delete</button>
     </div>
   </div>
 );
